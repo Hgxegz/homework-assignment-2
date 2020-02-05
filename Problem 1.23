@@ -1,0 +1,52 @@
+//remove comments from a program
+//two types of comments: single line and multiline
+//multi line comments have two pramaters
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+void CommentRemover(FILE *fin, FILE *fout);
+
+int main(int argc , const char* argv[]){
+  FILE *fin = fopen(argv[1] , "r");
+  FILE *fout = fopen(argv[2] , "w");
+  //look for two forward slashes to indicate single quoted lines
+  //delete the line with the forward slashes to get rid of those comments
+  CommentRemover(fin, fout);
+return 0;
+}
+
+void CommentRemover(FILE *fin, FILE *fout){
+  bool inDoubleQuote = NULL, inSingleQuote = NULL;
+  int c, doubleQuoteCount =0, singleQuoteCount =0;
+  while((c = fgetc(fin)) != EOF){
+    if(doubleQuoteCount > 0){ //tells you if the chars are in a quote
+      if(doubleQuoteCount == 2){
+        doubleQuoteCount = 0;
+      }
+      inDoubleQuote = true;
+    }
+    if(singleQuoteCount > 0){ //tells us if we're in single quote
+      if(singleQuoteCount == 2){
+        singleQuoteCount = 0;
+      }
+      inSingleQuote = true;
+    }
+      if(c == '"') {
+        ++doubleQuoteCount;
+      } else if(c == '\''){
+        ++singleQuoteCount;
+      }
+
+    if(c == '/' && inSingleQuote == false && inDoubleQuote == false){
+      if((c = fgetc(fin)) == '/'){
+        while((c = fgetc(fin)) != '\n'){
+        }
+      } else if((c = fgetc(fin)) == '*'){
+        while((c = fgetc(fin)) != '*'){
+        }
+      }
+    }
+    fputc(c , fout);
+  }
+}
