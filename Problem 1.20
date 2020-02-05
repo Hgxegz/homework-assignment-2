@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include "fileHandle.c"
+
+int main(int argc, const char* argv[]){
+  FILE *fin;
+  FILE *fout;
+  int c, tabBreaks, count = 0, lines;
+  if (!openFiles(argc, argv, &fin, &fout, &tabBreaks, "Usage: ./detab infile outfile n")) {
+    printf("ERROR: file does not exist\n");
+    exit(2);
+  }
+
+  while((c = fgetc(fin)) != EOF){
+    if(c != '\t'){
+      ++count;
+      fputc(c, fout);
+    } else {
+      lines = tabBreaks - count;
+      count = 0;
+      for(int j = 0; j < lines; ++j){
+        fputc('-' , fout);
+      }
+      fputc('|', fout);
+      }
+
+
+  }
+
+  return 0;
+}
