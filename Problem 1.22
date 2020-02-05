@@ -1,0 +1,24 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include"fileDurr.c"
+
+int main(int argc , const char* argv[]) {
+    FILE *fin;
+    FILE *fout;
+    int pos = 0,c, maxcol;
+    if (!openFiles(argc, argv, &fin, &fout, &maxcol, "Usage: ./folding infile outfile n")) {
+      printf("ERROR: file does not exist\n");
+      exit(2);
+    }
+//basically go read the file until a certain column and the cut the line off
+  while((c = fgetc(fin)) != EOF){
+    if(pos <= maxcol){
+      ++pos;
+      fputc(c , fout);
+    } else {
+      fputc('\n' , fout);
+      pos = 0;
+    }
+    }
+    return 0;
+  }
