@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+
+int bracketCounter(FILE *fin);
+int parCounter(FILE *fin);
+int braceCounter(FILE *fin);
+int doubleQuoteCounter(FILE *fin);
+int singleQuoteCounter(FILE *fin);
+
+int main(int argc, const char* argv[]){
+  FILE *fin = fopen(argv[1] , "r");
+  char c;
+  int brace, brack, par, singleQ, doubleQ;
+  brace = braceCounter(fin);
+  par = parCounter(fin);
+  brack = bracketCounter(fin);
+  singleQ = singleQuoteCounter(fin);
+  doubleQ = doubleQuoteCounter(fin);
+
+  if(brace != 0){
+    printf("Returned %d\n" , brace);
+    printf("There is unmatched BRACES \n");
+  }
+  if(par != 0){
+    printf("Returned %d\n" , par);
+    printf("There is unmatched PARENTHESES \n");
+  }
+  if(brack != 0){
+    printf("Returned %d\n" , brack);
+    printf("There is unmatched BRACKETS \n");
+  }
+  if(singleQ != 0){
+    printf("Returned %d\n" , singleQ);
+    printf("There is unmatched SINGLE QUOTE \n");
+  }
+  if(doubleQ != 0){
+    printf("Returned %d\n" , doubleQ);
+    printf("There is unmatched DOUBLE QUOTE \n");
+  }
+
+  if(brace == 0 && brack == 0 && par == 0 && singleQ == 0 && doubleQ == 0){
+  printf("No rudimentary syntax errors");
+}
+
+  fclose(fin);
+  return 0;
+}
+
+int bracketCounter(FILE *fin){
+  char c;
+  int bracket=0;
+  while((c = fgetc(fin)) != EOF){
+    if(c == '['){
+      ++bracket;
+    } else if(c == ']'){
+      --bracket;
+    }
+  }
+  return bracket;
+}
+
+int parCounter(FILE *fin){
+  char c;
+  int par=0;
+  while((c = fgetc(fin)) != EOF){
+    if(c == '('){
+      ++par;
+    } else if(c == ')'){
+      --par;
+    }
+  }
+  return par;
+}
+
+int braceCounter(FILE *fin){
+  char c;
+  int braces=0;
+  while((c = fgetc(fin)) != EOF){
+    if(c == '{'){
+      ++braces;
+    } else if(c == '}'){
+      --braces;
+    }
+  }
+  return braces;
+}
+
+int singleQuoteCounter(FILE *fin){
+  char c;
+  int flag = 0, single = 0;
+  while((c = fgetc(fin)) != EOF){
+    if(c == '\''){
+      flag = 1;
+      ++single;
+     while(flag == 1){
+       c = fgetc(fin);
+       if(c == '\''){
+         --single;
+         flag = 0;
+       }
+     }
+   }
+}
+  return single;
+}
+
+int doubleQuoteCounter(FILE *fin){
+  char c;
+  int flag = 0, doubleQ = 0;
+  while((c = fgetc(fin)) != EOF){
+    if(c == '\''){
+      flag = 1;
+      ++doubleQ;
+     while(flag == 1){
+       c = fgetc(fin);
+       if(c == '\''){
+         --doubleQ;
+         flag = 0;
+       }
+     }
+   }
+}
+  return doubleQ;
+}
